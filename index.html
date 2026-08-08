@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Single Pull</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: black;
+      font-family: Arial, sans-serif;
+      color: white;
+      overflow: hidden;
+    }
+
+    .bottom-button {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #22c55e;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #16a34a;
+    }
+
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    #videoPlayer {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      background: black;
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background video -->
+  <video autoplay muted loop id="bgVideo">
+    <source src="MAIN TEST.mp4" type="video/mp4" />
+  </video>
+
+  <div class="bottom-button">
+    <button onclick="singlePull()">Single Pull x1</button>
+  </div>
+
+  <video id="videoPlayer"></video>
+
+  <script>
+    const videos = [
+      "WF.mp4",
+	  "BS.mp4",
+	  "SM.mp4",
+	  "ES.mp4",
+	  "SS.mp4",
+    ];
+
+    function singlePull() {
+      const video = document.getElementById("videoPlayer");
+      const bg = document.getElementById("bgVideo");
+
+      const randomIndex = Math.floor(Math.random() * videos.length);
+      const selectedVideo = videos[randomIndex];
+
+      console.log("Playing:", selectedVideo);
+
+      // Pause background
+      bg.pause();
+
+      video.src = selectedVideo;
+      video.style.display = "block";
+      video.currentTime = 0;
+
+      video.muted = false;
+      video.volume = 1.0;
+
+      video.play().catch(err => {
+        console.error("Playback blocked:", err);
+      });
+
+      video.onended = () => {
+        video.style.display = "none";
+        video.pause();
+        video.src = "";
+
+        bg.play();
+      };
+    }
+  </script>
+
+</body>
+</html>
